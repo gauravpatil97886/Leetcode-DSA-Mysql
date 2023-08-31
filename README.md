@@ -10,8 +10,8 @@ Welcome to my coding problem-solving repository. This is where I've embarked on 
 
 - 🧩 Solutions to intriguing coding problems with in-depth explanations.
 - 🗂 Organized folders based on the platforms (LeetCode, GeeksforGeeks, etc.).
-- 💡 Code written in versatile programming languages (C++, Python, Java, and more).
-- 📝 Clean and well-documented code to showcase my logical approach.
+- 💡 Code written in versatile programming languages (C++, Python).
+- 📝  Neatly documented code enriched with explanatory comments, illustrating my thought process and approach.
 
 Feel free to explore the diverse folders and solutions. Each solution is accompanied by a detailed explanation of the problem and my step-by-step approach. I've strived to keep the code clean, efficient, and easy to understand. 🤓
 
