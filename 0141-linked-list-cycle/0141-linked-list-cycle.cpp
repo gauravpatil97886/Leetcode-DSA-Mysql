@@ -1,25 +1,42 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
 class Solution {
 public:
     bool hasCycle(ListNode *head) {
-        if (!head || !head->next) {
-            // If the list has 0 or 1 nodes, there can't be a cycle.
-            return false;
+        /* EXPLANATION:
+        *  If a linked list has a cycle, there must be a node which
+        *  two different nodes point to. Taking an example:
+        *    head -> ... -> a -> b -> ... -> c -> b -> ...
+        *  Let's think about the way we reverse a linked list. The first time
+        *  that we encounter b, we make it pointing back to a, and move to
+        *  the next node (into the cycle). Now, we've processed c and move to
+        *  b again, and b is pointing to a. That is, after we process b twice,
+        *  we'll process every node before b, in the original list, and
+        *  eventually back to head.
+        *  Hence, if a linked list has a cycle, and if we reverse it, we'll
+        *  have two same head.
+        */
+        return (head == NULL || head -> next == NULL) ?
+            false : head == reverseSinglyLinkedList(head);
+    }
+private:
+    ListNode* reverseSinglyLinkedList (ListNode *head) {
+        if (head == NULL) return head;
+        ListNode *prev = NULL, *curr = NULL, *nxt = NULL;
+        curr = head;
+        nxt  = curr -> next;
+        while (nxt) {
+            curr -> next = prev;
+            prev = curr;
+            curr = nxt;
+            nxt  = curr -> next;
         }
-
-        ListNode *tortoise = head;
-        ListNode *hare = head;
-
-        while (hare && hare->next) {
-            tortoise = tortoise->next;       // Move one step.
-            hare = hare->next->next;        // Move two steps.
-
-            if (tortoise == hare) {
-                // If the tortoise and hare meet, there is a cycle.
-                return true;
-            }
-        }
-
-        // If we reach the end of the list, there is no cycle.
-        return false;
+        return curr;
     }
 };
