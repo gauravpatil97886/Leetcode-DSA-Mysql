@@ -1,18 +1,24 @@
 class Solution {
 public:
-   ListNode* reverseBetween(ListNode* head, int m, int n) {
-       ListNode *dummy = new ListNode(0), *pre = dummy, *cur;
-       dummy -> next = head;
-       for (int i = 0; i < m - 1; i++) {
-           pre = pre -> next;
-       }
-       cur = pre -> next;
-       for (int i = 0; i < n - m; i++) {
-           ListNode* temp = pre -> next;
-           pre -> next = cur -> next;
-           cur -> next = cur -> next -> next;
-           pre -> next -> next = temp;
-       }
-       return dummy -> next;
-   }
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode *pre = dummy, *cur = head;
+
+        // Move pre and cur to their positions
+        for (int i = 1; i < m; i++) {
+            pre = pre->next;
+            cur = cur->next;
+        }
+
+        // Reverse the sublist
+        for (int i = m; i < n; i++) {
+            ListNode *temp = cur->next;
+            cur->next = temp->next;
+            temp->next = pre->next;
+            pre->next = temp;
+        }
+
+        return dummy->next;
+    }
 };
