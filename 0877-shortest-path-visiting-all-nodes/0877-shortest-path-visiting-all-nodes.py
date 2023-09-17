@@ -1,27 +1,33 @@
-from collections import deque
+from collections import deque, namedtuple
 
 class Solution:
-    def shortestPathLength(self, graph: List[List[int]]) -> int:
+    def shortestPathLength(self, graph):
         n = len(graph)
-        target_mask = (1 << n) - 1  # A bitmask with all nodes visited
-        
+        all_mask = (1 << n) - 1
         visited = set()
-        
-        queue = deque((i, 1 << i, 0) for i in range(n))
-        
-        while queue:
-            node, state, cost = queue.popleft()
-            
-            if state == target_mask:
-                return cost
-            
-            if (node, state) in visited:
-                continue
-                
-            visited.add((node, state))
-            
-            for neighbor in graph[node]:
-                new_state = state | (1 << neighbor)
-                queue.append((neighbor, new_state, cost + 1))
-        
-        return -1  # If no valid path is found, return -1
+        Node = namedtuple('Node', ['node', 'mask', 'cost'])
+
+        q = deque()
+
+        # Initialize the queue with starting states (node, mask, cost)
+        for i in range(n):
+            mask_value = (1 << i)
+            this_node = Node(i, mask_value, 1)
+            q.append(this_node)
+            visited.add((i, mask_value))
+
+        while q:
+            curr = q.popleft()
+
+            if curr.mask == all_mask:
+                return curr.cost - 1
+
+            for adj in graph[curr.node]:
+                both_visited_mask = curr.mask | (1 << adj)
+                this_node = Node(adj, both_visited_mask, curr.cost + 1)
+
+                if (adj, both_visited_mask) not in visited:
+                    visited.add((adj, both_visited_mask))
+                    q.append(this_node)
+
+        return -1
