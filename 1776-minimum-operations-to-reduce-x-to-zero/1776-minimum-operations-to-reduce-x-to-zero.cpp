@@ -1,25 +1,22 @@
 class Solution {
 public:
-    int minOperations(std::vector<int>& nums, int x) {
-        int target = 0, n = nums.size();
-        for (int num : nums) target += num;
-        target -= x;
-        
-        if (target == 0) return n;
-        
-        int max_len = 0, curr_sum = 0, left = 0;
-        
-        for (int right = 0; right < n; ++right) {
-            curr_sum += nums[right];
-            while (left <= right && curr_sum > target) {
-                curr_sum -= nums[left];
-                left++;
-            }
-            if (curr_sum == target) {
-                max_len = std::max(max_len, right - left + 1);
-            }
+    int minOperations(vector<int>& nums, int targetSum) {
+        int totalSum = accumulate(nums.begin(), nums.end(), 0);
+        int target = totalSum - targetSum;
+
+        if (target < 0) return -1;
+        if (target == 0) return nums.size();
+
+        int n = nums.size();
+        int minOps = INT_MAX;
+        int currSum = 0, left = 0, right = 0;
+
+        while (right < n) {
+            currSum += nums[right++];
+            while (currSum > target && left < n) currSum -= nums[left++];
+            if (currSum == target) minOps = min(minOps, n - (right - left));
         }
-        
-        return max_len ? n - max_len : -1;
+
+        return (minOps == INT_MAX) ? -1 : minOps;
     }
 };
