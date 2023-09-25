@@ -1,16 +1,22 @@
 class Solution {
 public:
     char findTheDifference(string s, string t) {
-        char result = 0;
-        
+        vector<int> count(128, 0);
+
         for (char ch : s) {
-            result ^= ch;
+            count[ch]++;
         }
-        
+
         for (char ch : t) {
-            result ^= ch;
+            count[ch]--;
         }
-        
-        return result;
+
+        for (int i = 0; i < 128; i++) {
+            if (count[i] < 0) {
+                return i;
+            }
+        }
+
+        return ' ';
     }
 };
