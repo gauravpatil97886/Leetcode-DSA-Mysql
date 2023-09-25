@@ -1,22 +1,16 @@
 class Solution {
 public:
     char findTheDifference(string s, string t) {
-        vector<int> count(26, 0);
-
+        char result = 0;
+        
         for (char ch : s) {
-            count[ch - 'a']++;
+            result ^= ch;
         }
-
+        
         for (char ch : t) {
-            count[ch - 'a']--;
+            result ^= ch;
         }
-
-        for (int i = 0; i < 26; i++) {
-            if (count[i] < 0) {
-                return 'a' + i;
-            }
-        }
-
-        return ' ';
+        
+        return result;
     }
 };
