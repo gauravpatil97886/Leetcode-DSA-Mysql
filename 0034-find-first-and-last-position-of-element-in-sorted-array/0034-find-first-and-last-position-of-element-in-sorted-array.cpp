@@ -1,28 +1,25 @@
+
 class Solution {
 public:
     vector<int> searchRange(vector<int>& nums, int target) {
-        int firstOccurrence = binarySearch(nums, target, true);
-        int lastOccurrence = binarySearch(nums, target, false);
-        return {firstOccurrence, lastOccurrence};
+        return {BinarySearch(nums, target, "FIRST"), BinarySearch(nums, target, "LAST")};
     }
     
-    int binarySearch(vector<int>& nums, int target, bool findFirst) {
-        int left = 0, right = nums.size() - 1;
+    int BinarySearch(vector<int> nums, int num, string find) {
+        int left = 0, right = nums.size() - 1, mid;
         int result = -1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2;
+            mid = (left + right) / 2;
 
-            if (nums[mid] == target) {
+            if (nums[mid] == num) {
                 result = mid;
-                if (findFirst) {
-                    right = mid - 1;
-                } else {
-                    left = mid + 1;
-                }
-            } else if (nums[mid] > target) {
+                (find == "FIRST") ? right = mid - 1 : left = mid + 1;
+            }
+            else if (nums[mid] > num) {
                 right = mid - 1;
-            } else {
+            }
+            else {
                 left = mid + 1;
             }
         }
