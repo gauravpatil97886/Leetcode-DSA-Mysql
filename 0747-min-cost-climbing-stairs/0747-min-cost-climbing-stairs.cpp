@@ -2,13 +2,17 @@
 
 class Solution {
 public:
-    int minCostClimbingStairs(vector<int>& cost) {
-        int a = cost[0], b = cost[1];
-        for (int i = 2; i < cost.size(); i++) {
-            int c = min(a, b) + cost[i];
-            a = b;
-            b = c;
+    int minCostClimbingStairs(std::vector<int>& cost) {
+        int n = cost.size();
+        int prev1 = cost[0];
+        int prev2 = cost[1];
+
+        for (int i = 2; i < n; i++) {
+            int current = cost[i] + std::min(prev1, prev2);
+            prev1 = prev2;
+            prev2 = current;
         }
-        return min(a, b);
+
+        return std::min(prev1, prev2);
     }
 };
