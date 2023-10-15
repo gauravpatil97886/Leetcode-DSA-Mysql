@@ -1,24 +1,24 @@
 class Solution {
 public:
-    int numWays(int steps, int arrLen) {
-        const int MOD = 1000000007;
-        int maxPos = min(steps / 2, arrLen - 1);
+  int numWays(int steps, int arrLen) {
+    constexpr int kMod = 1'000'000'007;
+    const int n = min(arrLen, steps / 2 + 1);
+    vector<long> dp(n);
+    dp[0] = 1;
 
-        vector<vector<int>> dp(steps + 1, vector<int>(maxPos + 1, 0));
-        dp[0][0] = 1;
-
-        for (int i = 1; i <= steps; i++) {
-            for (int j = 0; j <= maxPos; j++) {
-                dp[i][j] = dp[i - 1][j];
-                if (j > 0) {
-                    dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD;
-                }
-                if (j < maxPos) {
-                    dp[i][j] = (dp[i][j] + dp[i - 1][j + 1]) % MOD;
-                }
-            }
-        }
-
-        return dp[steps][0];
+    while (steps--) {
+      vector<long> newDp(n);
+      for (int i = 0; i < n; ++i) {
+        newDp[i] = dp[i];
+        if (i - 1 >= 0)
+          newDp[i] += dp[i - 1];
+        if (i + 1 < n)
+          newDp[i] += dp[i + 1];
+        newDp[i] %= kMod;
+      }
+      dp = move(newDp);
     }
+
+    return dp[0];
+  }
 };
