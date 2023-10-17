@@ -1,35 +1,26 @@
-from collections import Counter
+from collections import deque
 
 class Solution:
-    def validateBinaryTreeNodes(self, n: int, leftChild: List[int], rightChild: List[int]) -> bool:
-        inDegree = Counter()
-        root = -1
-
-        for child in leftChild:
-            if child != -1 and inDegree[child] == 1:
-                return False
-            if child != -1:
-                inDegree[child] += 1
-
-        for child in rightChild:
-            if child != -1 and inDegree[child] == 1:
-                return False
-            if child != -1:
-                inDegree[child] += 1
-
+    def validateBinaryTreeNodes(self, n, leftChild, rightChild):
+        root = 0
+        childrenNodes = set(leftChild + rightChild)
         for i in range(n):
-            if inDegree[i] == 0:
-                if root == -1:
-                    root = i
-                else:
-                    return False
+            if i not in childrenNodes:
+                root = i
 
-        if root == -1:
-            return False
+        visited = set()
+        queue = deque([root])
 
-        return self.countNodes(root, leftChild, rightChild) == n
+        while queue:
+            node = queue.popleft()
+            if node in visited:
+                return False
 
-    def countNodes(self, root, leftChild, rightChild):
-        if root == -1:
-            return 0
-        return 1 + self.countNodes(leftChild[root], leftChild, rightChild) + self.countNodes(rightChild[root], leftChild, rightChild)
+            visited.add(node)
+
+            if leftChild[node] != -1:
+                queue.append(leftChild[node])
+            if rightChild[node] != -1:
+                queue.append(rightChild[node])
+
+        return len(visited) == n
