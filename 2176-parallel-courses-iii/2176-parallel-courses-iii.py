@@ -1,15 +1,25 @@
-from collections import defaultdict
-from functools import lru_cache
-from typing import List
-
 class Solution:
-    def minimumTime(self, n: int, relations: List[List[int]], time: List[int]) -> int:
-        G = defaultdict(list)
-        for x, y in relations:
-            G[y].append(x)
+  def minimumTime(self, n: int, relations: List[List[int]], time: List[int]) -> int:
+    graph = [[] for _ in range(n)]
+    inDegree = [0] * n
+    dist = time.copy()
 
-        @lru_cache(None)
-        def dp(node):
-            return time[node - 1] + max([dp(child) for child in G[node]] + [0])
+    # Build graph.
+    for a, b in relations:
+      u = a - 1
+      v = b - 1
+      graph[u].append(v)
+      inDegree[v] += 1
 
-        return max(dp(i) for i in range(1, n + 1))
+    # Topology
+    q = collections.deque([i for i, d in enumerate(inDegree) if d == 0])
+
+    while q:
+      u = q.popleft()
+      for v in graph[u]:
+        dist[v] = max(dist[v], dist[u] + time[v])
+        inDegree[v] -= 1
+        if inDegree[v] == 0:
+          q.append(v)
+
+    return max(dist)
