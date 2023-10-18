@@ -1,30 +1,15 @@
-from collections import deque
+from collections import defaultdict
+from functools import lru_cache
 from typing import List
-import numpy as np
 
 class Solution:
     def minimumTime(self, n: int, relations: List[List[int]], time: List[int]) -> int:
-        graph = [[] for _ in range(n)]
-        inDegree = [0] * n
-        q = deque()
-        dist = np.array(time)
+        G = defaultdict(list)
+        for x, y in relations:
+            G[y].append(x)
 
-        for r in relations:
-            u = r[0] - 1
-            v = r[1] - 1
-            graph[u].append(v)
-            inDegree[v] += 1
+        @lru_cache(None)
+        def dp(node):
+            return time[node - 1] + max([dp(child) for child in G[node]] + [0])
 
-        for i in range(n):
-            if inDegree[i] == 0:
-                q.append(i)
-
-        while q:
-            u = q.popleft()
-            for v in graph[u]:
-                dist[v] = max(dist[v], dist[u] + time[v])
-                inDegree[v] -= 1
-                if inDegree[v] == 0:
-                    q.append(v)
-
-        return max(dist)
+        return max(dp(i) for i in range(1, n + 1))
