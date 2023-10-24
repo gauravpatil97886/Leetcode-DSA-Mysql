@@ -1,7 +1,5 @@
 from typing import List
-import collections
-import math
-from queue import SimpleQueue
+from collections import deque
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -14,18 +12,20 @@ class Solution:
         if not root:
             return []
 
-        ans = []
-        q = collections.deque([root])
+        queue = deque()
+        queue.append(root)
 
-        while q:
-            max_val = -math.inf
-            for _ in range(len(q)):
-                node = q.popleft()
-                max_val = max(max_val, node.val)
+        result = []
+        while queue:
+            size = len(queue)
+            layer = []
+            for i in range(size):
+                node = queue.popleft()
+                layer.append(node.val)
                 if node.left:
-                    q.append(node.left)
+                    queue.append(node.left)
                 if node.right:
-                    q.append(node.right)
-            ans.append(max_val)
+                    queue.append(node.right)
 
-        return ans
+            result.append(max(layer))
+        return result
