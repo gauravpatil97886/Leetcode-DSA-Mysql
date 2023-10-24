@@ -1,31 +1,17 @@
-from typing import List
-from collections import deque
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
 class Solution:
-    def largestValues(self, root: TreeNode) -> List[int]:
+    def largestValues(self, root: Optional[TreeNode]) -> List[int]:
         if not root:
             return []
-
-        queue = deque()
-        queue.append(root)
-
-        result = []
-        while queue:
-            size = len(queue)
-            layer = []
-            for i in range(size):
-                node = queue.popleft()
-                layer.append(node.val)
-                if node.left:
-                    queue.append(node.left)
-                if node.right:
-                    queue.append(node.right)
-
-            result.append(max(layer))
-        return result
+        row_max = []
+        stack = [(root, 0)]
+        while stack:
+            curr, row = stack.pop()
+            if row > len(row_max) - 1:
+                row_max.append(curr.val)
+            else:
+                row_max[row] = max(row_max[row], curr.val)
+            for child in [curr.left, curr.right]:
+                if not child:
+                    continue
+                stack.append((child, row + 1))
+        return row_max
