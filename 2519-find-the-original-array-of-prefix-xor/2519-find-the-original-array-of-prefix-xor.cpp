@@ -1,13 +1,17 @@
 class Solution {
 public:
+    Solution() {
+        ios_base::sync_with_stdio(false);
+        cin.tie(nullptr);
+        cout.tie(nullptr);
+    }
+
     vector<int> findArray(vector<int>& pref) {
-        vector<int> ans;
-        ans.push_back(pref[0]);
-        for(int i = 1; i < pref.size(); i++)
-        {
-            int ele = pref[i-1] ^ pref[i];
-            ans.push_back(ele);
-        }
-        return ans;
+        if (pref.empty()) return vector<int>();
+
+        for (int i = pref.size() - 1; i > 0; i--)
+            pref[i] ^= pref[i - 1];
+
+        return pref;
     }
 };
